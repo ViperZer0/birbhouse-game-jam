@@ -13,18 +13,12 @@ void AnimatedSprite::setTexture(sf::Texture* tex){
     sprite.setTexture(*tex);
 }
 
-void AnimatedSprite::addAnimationSequence(AnimationSequence* seq){
-    animations.push_back(seq);
-}
-
-void AnimatedSprite::setAnimationSeq(int currentSeq){
-    if((currentSeq >= 0) && (currentSeq < animations.size())){
-        this->currentSeq = currentSeq;
-    }
+void AnimatedSprite::setAnimationSeq(AnimationSequence* seq){
+    animation = seq;
 }
 
 void AnimatedSprite::update(){
-    sprite.setTextureRect(animations[currentSeq]->update());
+    sprite.setTextureRect(animation->update());
 }
 
 void AnimatedSprite::draw(sf::RenderTarget &target, sf::RenderStates states) const{

@@ -25,8 +25,7 @@ Player::Player(){
     squat->addFrame(sf::IntRect(0,0,130,200),sf::milliseconds(500));
     squat->addFrame(sf::IntRect(130,0,130,200),sf::milliseconds(500));
     squat->setBidirectional(false);
-    sprite->addAnimationSequence(squat);
-    sprite->setAnimationSeq(0);
+    sprite->setAnimationSeq(squat);
     sprite->getSprite().setPosition(sf::Vector2f(500.f,400.f));
 }
 
