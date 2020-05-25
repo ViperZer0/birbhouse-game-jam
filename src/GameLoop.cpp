@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "Game.hpp"
 
 void Game::loop(){
     player.update();

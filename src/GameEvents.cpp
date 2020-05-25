@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "Game.hpp"
 #include <SFML/Window/Event.hpp>
 
 void Game::events(){
@@ -10,7 +10,7 @@ void Game::events(){
                 running=false;
                 break;
             default:
-                break;
+                player.handleInput(event);
         }
     }
 }

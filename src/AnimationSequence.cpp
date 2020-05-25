@@ -1,7 +1,9 @@
-#include "AnimationSequence.h"
+#include "AnimationSequence.hpp"
 #include <iostream>
 AnimationSequence::AnimationSequence(){
+    std::cout << "Constructed" << std::endl;
     this->frame = 0;
+    this->right = true;
     this->clock.restart();
 }
 
@@ -11,6 +13,7 @@ sf::IntRect AnimationSequence::update(){
         f = next();
         clock.restart();
     }
+    std::cout << "Frames size:" << frames.size() << std::endl;
     std::cout << frame << std::endl;
     return f;
 }
@@ -86,6 +89,7 @@ sf::IntRect AnimationSequence::prev(){
 }
 
 sf::IntRect AnimationSequence::getFrame(){
+    std::cout << "Frame:" << frame << std::endl;
     return frames[frame];
 }
 

@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "Game.hpp"
 
 void Game::render(){
     window.clear(sf::Color::Red);

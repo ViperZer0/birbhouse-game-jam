@@ -1,4 +1,4 @@
-#include "AnimatedSprite.h"
+#include "AnimatedSprite.hpp"
 #include <iostream>
 AnimatedSprite::AnimatedSprite(){
     //Empty :C
@@ -28,8 +28,6 @@ void AnimatedSprite::update(){
 }
 
 void AnimatedSprite::draw(sf::RenderTarget &target, sf::RenderStates states) const{
-    std::cout << "texture:" << sprite.getTexture() << std::endl;
-    std::cout << "sprite:(" << sprite.getTextureRect().left << "," << sprite.getTextureRect().top << "," << sprite.getTextureRect().width << "," << sprite.getTextureRect().height << ")" << std::endl;
     target.draw(sprite);
 }
 
