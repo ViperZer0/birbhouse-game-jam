@@ -9,6 +9,7 @@ class Player: public GameActor{
         //PlayerState *state;
     public:
         Player();
+        ~Player() {}
         void setSprite(AnimatedSprite *sprite);
         void handleInput(sf::Event event);
 

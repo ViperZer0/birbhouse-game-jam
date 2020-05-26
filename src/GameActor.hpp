@@ -2,16 +2,22 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include "AnimatedSprite.hpp"
-class GameActor: public sf::Drawable{
+#include "Obstacle.hpp"
+#include "GameObject.hpp"
+
+enum class Direction{left,right,up,down,collide};
+
+class GameActor: public GameObject{
     protected:
-       int pos[2]; //pixel
-        int vel[2]; //pixels per second
-        int acc[2]; //Pixels per second^2
-        int jumpVel;
-        int fallAcc;
-        int moveSpeed;
+       float pos[2]; //pixel
+        float vel[2]; //pixels per second
+        float acc[2]; //Pixels per second^2
+        float jumpVel;
+        float fallAcc;
+        float moveSpeed;
         bool jumpDebounce;
         //Note we don't actually handle collisions in this function, we're gonna have children that do this.
+        bool bonking;
         bool falling;
         bool collideRight;
         bool collideLeft;
@@ -20,12 +26,22 @@ class GameActor: public sf::Drawable{
         AnimatedSprite *sprite;
     public:
         GameActor();
+
+        ~GameActor(){
+            delete sprite;
+        }
         void jump();
         void right();
         void left();
         void stop();
-        void update();
+        virtual void update();
+        virtual sf::FloatRect getGlobalBounds(){
+            return sprite->getGlobalBounds();
+        }
+        Direction getDirection(sf::FloatRect self,sf::FloatRect other);
+        void detectCollisions(GameObject *obj);
         void setTexture(sf::Texture *tex);
         void setSprite(AnimatedSprite *sprite);
+        
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };

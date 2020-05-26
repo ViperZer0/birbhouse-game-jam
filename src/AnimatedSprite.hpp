@@ -14,10 +14,23 @@ class AnimatedSprite: public sf::Drawable{
     public:
         AnimatedSprite();
         AnimatedSprite(sf::Texture *tex);
+        ~AnimatedSprite(){
+            delete animation;
+        }
         void setTexture(sf::Texture *tex);
         void setAnimationSeq(AnimationSequence* seq);
         sf::Sprite getSprite();
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+
+        void setPosition(float x, float y){
+            sprite.setPosition(x,y);
+        }
+
+        sf::FloatRect getGlobalBounds(){
+            return sprite.getGlobalBounds();
+        }
+
+
         void update();
 };
 

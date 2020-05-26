@@ -1,14 +1,21 @@
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <vector>
+
 #include "AnimatedSprite.hpp"
 #include "Player.hpp"
+#include "Obstacle.hpp"
+#include "QuadTree.hpp"
+#include "GameObject.hpp"
 class Game{
     private:
         sf::RenderWindow window;
         sf::Texture *tilemap;
         Player player; 
-
+        std::vector<GameObject *> objects; 
+        //std::vector<Obstacle> obstacles;
+        Quadtree *quad;
     public:
         bool running;
         Game();

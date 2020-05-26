@@ -16,5 +16,6 @@ add_executable(birbhouse-game-jam
     src/AnimationSequence.cpp
     src/GameActor.cpp
     src/Player.cpp
+    src/QuadTree.cpp
     )
 target_link_libraries(birbhouse-game-jam sfml-graphics sfml-audio)
