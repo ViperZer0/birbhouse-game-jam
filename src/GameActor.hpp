@@ -21,7 +21,9 @@ class GameActor: public GameObject{
         bool falling;
         bool collideRight;
         bool collideLeft;
+
         sf::Clock delta;
+        float timeElapsed;
         
         AnimatedSprite *sprite;
     public:
@@ -39,6 +41,8 @@ class GameActor: public GameObject{
             return sprite->getGlobalBounds();
         }
         Direction getDirection(sf::FloatRect self,sf::FloatRect other);
+        void hitTimer();
+        void resetTimer();
         void detectCollisions(GameObject *obj);
         void setTexture(sf::Texture *tex);
         void setSprite(AnimatedSprite *sprite);

@@ -25,7 +25,12 @@ class Logger{
 
 template <typename T>
 std::ostream& operator<<(std::ostream& os, sf::Rect<T> rect){
-    os << "(Left: " << rect.left << ", Top: " << rect.top << ", Width: " << rect.width << ", Height: " << rect.height << ")" << std::endl;
+    os << "(Left: " << rect.left << ", Top: " << rect.top << ", Width: " << rect.width << ", Height: " << rect.height << ")";
     return os;
+}
+
+std::ostream& operator<<(std::ostream& os, float array[2]){
+    os << "(" << array[0] << "," << array[1] << ")" << std::endl;
+    return os; 
 }
 

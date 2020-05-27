@@ -3,6 +3,8 @@
 
 Game::Game(){
     window.create(sf::VideoMode(800,600), "Birbhous Game Jam");
+    //Intentional delay, might move this to my own thing?
+    window.setFramerateLimit(framelimit);
     window.setKeyRepeatEnabled(false);
     running=true;
     tilemap= new sf::Texture;

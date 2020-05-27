@@ -32,7 +32,6 @@ void Game::loop(){
     for(obj=objects.begin();obj<objects.end();obj++){
         for(other=objects.begin();other<objects.end();other++){
             if(obj != other){
-                std::cout << "Obj:" << (*obj)->getId() << "Other:" << (*other)->getId() << std::endl;
                 (*obj)->detectCollisions(*other);
             }
         }

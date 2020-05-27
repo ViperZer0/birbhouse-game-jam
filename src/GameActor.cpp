@@ -1,21 +1,20 @@
-#include <SFML/Graphics/Rect.hpp>
+
 #include "GameActor.hpp"
 #include "Obstacle.hpp"
 #include <iostream>
 #include <cmath>
 #include "Logger.hpp"
 GameActor::GameActor(){
-    pos[0] = 0; pos[1] = 0;
+    pos[0] = 0;
+    pos[1] = 0;
     vel[0] = 0;
-    vel[1] = 0; 
-    acc[0] = 0; 
-    acc[1] = 0; 
-    jumpVel=5;
-    moveSpeed=5;
-    fallAcc=1;
+    vel[1] = 0; acc[0] = 0; acc[1] = 0;
+    jumpVel=500;
+    moveSpeed=500;
+    fallAcc=500;
     acc[1] = fallAcc;
     jumpDebounce=false;
-    falling=false;
+    falling=true;
     collideRight=false;
     collideLeft=false;
 
@@ -28,11 +27,14 @@ void GameActor::jump(){
         jumpDebounce=true;
     } 
 }
-void GameActor::right(){ vel[0] = moveSpeed;
+void GameActor::right(){
+    if(!collideRight)
+        vel[0] = moveSpeed;
 }
 
 void GameActor::left(){
-    vel[0] = -moveSpeed;
+    if(!collideLeft)
+        vel[0] = -moveSpeed;
 }
 
 void GameActor::stop(){
@@ -60,8 +62,16 @@ void GameActor::update(std::vector<Obstacle> obstacles){j
     sprite->update();
 }
 */
+void GameActor::hitTimer(){
+    timeElapsed = delta.getElapsedTime().asSeconds();
+}
+
+void GameActor::resetTimer(){
+    delta.restart();
+}
+
 void GameActor::update(){
-    float timeElapsed = delta.restart().asSeconds();
+    Logger::log(Log::DEBUG,"Vel:", vel, "Acc:", acc);
     if(falling){
         //positive Y is down
         acc[1]=fallAcc; 
@@ -72,9 +82,7 @@ void GameActor::update(){
         acc[1] = 0;
     }
     if(collideRight)
-        if (vel[0] > 0) 
-            vel[0] = 0;
-    
+        if (vel[0] > 0) vel[0] = 0;
     if(collideLeft)
         if (vel[0] < 0) 
             vel[0] = 0;
@@ -85,6 +93,12 @@ void GameActor::update(){
     pos[0] += vel[0]*timeElapsed;
     sprite->setPosition(pos[0],pos[1]);
     sprite->update();
+    //Reset collisions for next loop
+    falling=true;
+    bonking=false;
+    collideRight=false;
+    collideLeft=false;
+    resetTimer();
 }
 
 void GameActor::setSprite(AnimatedSprite *sprite){
@@ -107,26 +121,31 @@ Direction GameActor::getDirection(sf::FloatRect self,sf::FloatRect other){
 }
 
 void GameActor::detectCollisions(GameObject *obj){
-    float timeElapsed = delta.getElapsedTime().asSeconds();
+    hitTimer();
     sf::FloatRect cur = getGlobalBounds();
     sf::FloatRect next = sf::FloatRect( \
             cur.left + vel[0]*timeElapsed,\
             //Incorporate gravity here?
-            cur.top + vel[1]*timeElapsed + 1/2*acc[1]*pow(timeElapsed,2), \
+            cur.top + vel[1]*timeElapsed + 1.0/2.0*fallAcc*pow(timeElapsed,2), \
             cur.width, \
             cur.height);
+
     Direction currentCol = getDirection(cur,obj->getGlobalBounds());
     Direction nextCol = getDirection(next,obj->getGlobalBounds());
+    Logger::log(Log::DEBUG,"timeElapsed:", timeElapsed);
+    Logger::log(Log::DEBUG,"Acceleration:", 1.0/2.0*fallAcc*timeElapsed*timeElapsed);
+    Logger::log(Log::DEBUG,"fallAcc:",fallAcc, " Calculated drop: ", vel[1]*timeElapsed + 1.0/2.0*fallAcc*timeElapsed*timeElapsed);
     Logger::log(Log::DEBUG,"Cur: ",cur);
     Logger::log(Log::DEBUG,"Next: ", next);
     if (nextCol == Direction::collide){
-        std::cout << "AGH" << std::endl;
+        Logger::log(Log::DEBUG,"Colliding!");
         switch(currentCol){
             case Direction::left:
                 collideLeft = true;
                 break;
 
             case Direction::right:
+                Logger::log(Log::DEBUG,"Colliding right");
                 collideRight = true;
                 break;
                 
@@ -138,6 +157,7 @@ void GameActor::detectCollisions(GameObject *obj){
                 bonking=true;
                 break;
             case Direction::collide:
+                Logger::log(Log::WARNING,"GameActor got Direction::collide. Probably something got stuck inside something else.");
                 //whoops we broke shit this is NOT good.
                 break;
             default:

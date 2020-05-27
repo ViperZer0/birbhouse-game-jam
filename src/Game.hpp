@@ -14,6 +14,7 @@ class Game{
         sf::Texture *tilemap;
         Player player; 
         std::vector<GameObject *> objects; 
+        const int framelimit = 30;
         //std::vector<Obstacle> obstacles;
         Quadtree *quad;
     public:
@@ -22,5 +23,7 @@ class Game{
         void events();
         void loop();
         void render();
+        //Set framerate limit to eliminate clipping
+        void wait();
         ~Game();
 };
