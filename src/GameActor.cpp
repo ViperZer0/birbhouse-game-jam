@@ -3,6 +3,7 @@
 #include "Obstacle.hpp"
 #include <iostream>
 #include <cmath>
+#include "Logger.hpp"
 GameActor::GameActor(){
     pos[0] = 0; pos[1] = 0;
     vel[0] = 0;
@@ -116,7 +117,8 @@ void GameActor::detectCollisions(GameObject *obj){
             cur.height);
     Direction currentCol = getDirection(cur,obj->getGlobalBounds());
     Direction nextCol = getDirection(next,obj->getGlobalBounds());
-
+    Logger::log(Log::DEBUG,"Cur: ",cur);
+    Logger::log(Log::DEBUG,"Next: ", next);
     if (nextCol == Direction::collide){
         std::cout << "AGH" << std::endl;
         switch(currentCol){
