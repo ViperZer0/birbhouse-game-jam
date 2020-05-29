@@ -1,4 +1,3 @@
-
 #include "GameActor.hpp"
 #include "Obstacle.hpp"
 #include <iostream>
@@ -8,7 +7,9 @@ GameActor::GameActor(){
     pos[0] = 0;
     pos[1] = 0;
     vel[0] = 0;
-    vel[1] = 0; acc[0] = 0; acc[1] = 0;
+    vel[1] = 0;
+    acc[0] = 0;
+    acc[1] = 0;
     jumpVel=500;
     moveSpeed=500;
     fallAcc=500;
@@ -25,8 +26,7 @@ void GameActor::jump(){
     if(jumpDebounce == false){
         vel[1] = -jumpVel;
         jumpDebounce=true;
-    } 
-}
+    } }
 void GameActor::right(){
     if(!collideRight)
         vel[0] = moveSpeed;
@@ -81,9 +81,10 @@ void GameActor::update(){
     else{
         acc[1] = 0;
     }
-    if(collideRight)
-        if (vel[0] > 0) vel[0] = 0;
     if(collideLeft)
+        if (vel[0] > 0)
+            vel[0] = 0;
+    if(collideRight)
         if (vel[0] < 0) 
             vel[0] = 0;
     if(bonking)
@@ -123,12 +124,15 @@ Direction GameActor::getDirection(sf::FloatRect self,sf::FloatRect other){
 void GameActor::detectCollisions(GameObject *obj){
     hitTimer();
     sf::FloatRect cur = getGlobalBounds();
+    Logger::log(Log::DEBUG,"Vel:",vel);
     sf::FloatRect next = sf::FloatRect( \
+            //Assume movement because if we base it off current velocity it might be 0. No wait we can't do that I guess.
             cur.left + vel[0]*timeElapsed,\
             //Incorporate gravity here?
             cur.top + vel[1]*timeElapsed + 1.0/2.0*fallAcc*pow(timeElapsed,2), \
-            cur.width, \
-            cur.height);
+            cur.width,\
+            cur.height\
+            );
 
     Direction currentCol = getDirection(cur,obj->getGlobalBounds());
     Direction nextCol = getDirection(next,obj->getGlobalBounds());
@@ -137,6 +141,9 @@ void GameActor::detectCollisions(GameObject *obj){
     Logger::log(Log::DEBUG,"fallAcc:",fallAcc, " Calculated drop: ", vel[1]*timeElapsed + 1.0/2.0*fallAcc*timeElapsed*timeElapsed);
     Logger::log(Log::DEBUG,"Cur: ",cur);
     Logger::log(Log::DEBUG,"Next: ", next);
+    Logger::log(Log::DEBUG,"currentCol:", currentCol);
+    Logger::log(Log::DEBUG,"nextCol:", nextCol);
+
     if (nextCol == Direction::collide){
         Logger::log(Log::DEBUG,"Colliding!");
         switch(currentCol){
@@ -145,7 +152,6 @@ void GameActor::detectCollisions(GameObject *obj){
                 break;
 
             case Direction::right:
-                Logger::log(Log::DEBUG,"Colliding right");
                 collideRight = true;
                 break;
                 
@@ -161,9 +167,36 @@ void GameActor::detectCollisions(GameObject *obj){
                 //whoops we broke shit this is NOT good.
                 break;
             default:
+                Logger::log(Log::WARNING,"This message should NEVER appear.");
                 //Also not good.
                 break;
 
         }
     }
 }
+
+std::ostream& operator<<(std::ostream& os, Direction direction){
+    switch(direction){
+        case Direction::left:
+            os << std::string("LEFT");
+            break;
+        case Direction::right:
+            os << std::string("RIGHT");
+            break;
+        case Direction::up:
+            os << std::string("UP");
+            break;
+        case Direction::down:
+            os << std::string("DOWN");
+            break;
+        case Direction::collide:
+            os << std::string("COLLIDE");
+            break;
+        default:
+            os << std::string("NONE");
+            break;
+    }
+    return os;
+}
+
+

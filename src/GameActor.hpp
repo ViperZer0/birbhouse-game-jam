@@ -49,3 +49,7 @@ class GameActor: public GameObject{
         
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };
+
+std::ostream& operator<<(std::ostream& os, Direction direction);
+
+
