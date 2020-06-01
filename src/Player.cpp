@@ -1,6 +1,8 @@
 #include "Player.hpp"
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Event.hpp>
+#include "Equipment.hpp"
+#include "Logger.hpp"
 
 Player::Player(){
     pos[0] = 0;
@@ -18,6 +20,7 @@ Player::Player(){
     collideLeft=false;
     delta.restart();
     id = "player";
+    pickingUp = false;
     //Setup player
     sprite = new AnimatedSprite();
     AnimationSequence *squat;
@@ -58,3 +61,57 @@ void Player::handleInput(sf::Event event){
     else this->stop();
 }
 
+void Player::pickUp(GameObject *obj){
+    if(obj->getId() == std::string("equipment")){
+        Equipment *equipped = static_cast<Equipment *>(obj);
+        equip(equipped);
+    }
+    /*
+    else if(obj->getId() == std::string("coin")){
+        Coin *coin = std::static_cast<Coin *>(obj);
+        addCoins(coin->getAmount());
+    }*/
+}
+
+void Player::equip(Equipment *equip){
+    Slot slot = equip->getSlot();
+    std::vector<Equipment *>::iterator equipped;
+    Logger::log(Log::DEBUG,equipment.size());
+    for(equipped=equipment.begin();equipped!=equipment.end();equipped++){
+        Logger::log(Log::DEBUG,"Equipment");
+        if((*equipped)->getSlot() == slot)
+            goto replace;
+    }
+    Logger::log(Log::DEBUG,"No matching slot");
+    equipment.push_back(equip);
+    equip->equipped(this);
+
+    return;
+
+    //GOTO
+    replace: 
+    Logger::log(Log::DEBUG,"Replacing an item");
+    if(equip->getPickedUp()){
+        if(pickingUp){
+            swap(equip,equipped);
+            return;
+        }
+    }
+    else{
+        if(pickingUp){
+            swap(equip,equipped);
+            return;
+        }
+        if(equip->getValue() > (*equipped)->getValue()){
+            swap(equip,equipped);
+            return;
+        }
+    }
+}     
+
+void Player::swap(Equipment *a, std::vector<Equipment *>::iterator b){
+    equipment.push_back(a);
+    a->equipped(this);
+    (*b)->dropped(this);
+    equipment.erase(b);
+}

@@ -17,5 +17,8 @@ add_executable(birbhouse-game-jam
     src/GameActor.cpp
     src/Player.cpp
     src/QuadTree.cpp
+    src/Equipment.cpp
+    src/Sword.cpp
+    src/Logger.cpp
     )
 target_link_libraries(birbhouse-game-jam sfml-graphics sfml-audio)

@@ -3,12 +3,12 @@
 #include <iostream>
 #include <cmath>
 #include "Logger.hpp"
+
 GameActor::GameActor(){
     pos[0] = 0;
     pos[1] = 0;
     vel[0] = 0;
-    vel[1] = 0;
-    acc[0] = 0;
+    vel[1] = 0; acc[0] = 0;
     acc[1] = 0;
     jumpVel=500;
     moveSpeed=500;
@@ -70,7 +70,7 @@ void GameActor::resetTimer(){
     delta.restart();
 }
 
-void GameActor::update(){
+void GameActor::update(Player *player){
     Logger::log(Log::DEBUG,"Vel:", vel, "Acc:", acc);
     if(falling){
         //positive Y is down
@@ -122,55 +122,57 @@ Direction GameActor::getDirection(sf::FloatRect self,sf::FloatRect other){
 }
 
 void GameActor::detectCollisions(GameObject *obj){
-    hitTimer();
-    sf::FloatRect cur = getGlobalBounds();
-    Logger::log(Log::DEBUG,"Vel:",vel);
-    sf::FloatRect next = sf::FloatRect( \
-            //Assume movement because if we base it off current velocity it might be 0. No wait we can't do that I guess.
-            cur.left + vel[0]*timeElapsed,\
-            //Incorporate gravity here?
-            cur.top + vel[1]*timeElapsed + 1.0/2.0*fallAcc*pow(timeElapsed,2), \
-            cur.width,\
-            cur.height\
-            );
+    if(obj->canCollide()){
+        hitTimer();
+        sf::FloatRect cur = getGlobalBounds();
+        Logger::log(Log::DEBUG,"Vel:",vel);
+        sf::FloatRect next = sf::FloatRect( \
+                //Assume movement because if we base it off current velocity it might be 0. No wait we can't do that I guess.
+                cur.left + vel[0]*timeElapsed,\
+                //Incorporate gravity here?
+                cur.top + vel[1]*timeElapsed + 1.0/2.0*fallAcc*pow(timeElapsed,2), \
+                cur.width,\
+                cur.height\
+                );
 
-    Direction currentCol = getDirection(cur,obj->getGlobalBounds());
-    Direction nextCol = getDirection(next,obj->getGlobalBounds());
-    Logger::log(Log::DEBUG,"timeElapsed:", timeElapsed);
-    Logger::log(Log::DEBUG,"Acceleration:", 1.0/2.0*fallAcc*timeElapsed*timeElapsed);
-    Logger::log(Log::DEBUG,"fallAcc:",fallAcc, " Calculated drop: ", vel[1]*timeElapsed + 1.0/2.0*fallAcc*timeElapsed*timeElapsed);
-    Logger::log(Log::DEBUG,"Cur: ",cur);
-    Logger::log(Log::DEBUG,"Next: ", next);
-    Logger::log(Log::DEBUG,"currentCol:", currentCol);
-    Logger::log(Log::DEBUG,"nextCol:", nextCol);
+        Direction currentCol = getDirection(cur,obj->getGlobalBounds());
+        Direction nextCol = getDirection(next,obj->getGlobalBounds());
+        Logger::log(Log::DEBUG,"timeElapsed:", timeElapsed);
+        Logger::log(Log::DEBUG,"Acceleration:", 1.0/2.0*fallAcc*timeElapsed*timeElapsed);
+        Logger::log(Log::DEBUG,"fallAcc:",fallAcc, " Calculated drop: ", vel[1]*timeElapsed + 1.0/2.0*fallAcc*timeElapsed*timeElapsed);
+        Logger::log(Log::DEBUG,"Cur: ",cur);
+        Logger::log(Log::DEBUG,"Next: ", next);
+        Logger::log(Log::DEBUG,"currentCol:", currentCol);
+        Logger::log(Log::DEBUG,"nextCol:", nextCol);
 
-    if (nextCol == Direction::collide){
-        Logger::log(Log::DEBUG,"Colliding!");
-        switch(currentCol){
-            case Direction::left:
-                collideLeft = true;
-                break;
+        if (nextCol == Direction::collide){
+            Logger::log(Log::DEBUG,"Colliding!");
+            switch(currentCol){
+                case Direction::left:
+                    collideLeft = true;
+                    break;
 
-            case Direction::right:
-                collideRight = true;
-                break;
-                
-            case Direction::up:
-                jumpDebounce=false;
-                falling=false;
-                break;
-            case Direction::down:
-                bonking=true;
-                break;
-            case Direction::collide:
-                Logger::log(Log::WARNING,"GameActor got Direction::collide. Probably something got stuck inside something else.");
-                //whoops we broke shit this is NOT good.
-                break;
-            default:
-                Logger::log(Log::WARNING,"This message should NEVER appear.");
-                //Also not good.
-                break;
+                case Direction::right:
+                    collideRight = true;
+                    break;
+                    
+                case Direction::up:
+                    jumpDebounce=false;
+                    falling=false;
+                    break;
+                case Direction::down:
+                    bonking=true;
+                    break;
+                case Direction::collide:
+                    Logger::log(Log::WARNING,"GameActor got Direction::collide. Probably something got stuck inside something else.");
+                    //whoops we broke shit this is NOT good.
+                    break;
+                default:
+                    Logger::log(Log::WARNING,"This message should NEVER appear.");
+                    //Also not good.
+                    break;
 
+            }
         }
     }
 }
@@ -199,4 +201,6 @@ std::ostream& operator<<(std::ostream& os, Direction direction){
     return os;
 }
 
-
+sf::Sprite GameActor::getSprite(){
+    return sprite->getSprite();
+}

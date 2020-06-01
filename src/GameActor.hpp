@@ -36,7 +36,7 @@ class GameActor: public GameObject{
         void right();
         void left();
         void stop();
-        virtual void update();
+        virtual void update(Player *player);
         virtual sf::FloatRect getGlobalBounds(){
             return sprite->getGlobalBounds();
         }
@@ -48,6 +48,7 @@ class GameActor: public GameObject{
         void setSprite(AnimatedSprite *sprite);
         
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+        virtual sf::Sprite getSprite();
 };
 
 std::ostream& operator<<(std::ostream& os, Direction direction);

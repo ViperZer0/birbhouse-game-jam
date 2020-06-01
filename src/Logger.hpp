@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <SFML/Graphics/Rect.hpp>
 
@@ -22,15 +23,20 @@ class Logger{
             }
         }
 };
-
+/*
 template <typename T>
 std::ostream& operator<<(std::ostream& os, sf::Rect<T> rect){
     os << "(Left: " << rect.left << ", Top: " << rect.top << ", Width: " << rect.width << ", Height: " << rect.height << ")";
     return os;
-}
+}*/
 
-std::ostream& operator<<(std::ostream& os, float array[2]){
-    os << "(" << array[0] << "," << array[1] << ")" << std::endl;
-    return os; 
-}
+std::ostream& operator<<(std::ostream& os, sf::FloatRect rect);
+
+std::ostream& operator<<(std::ostream& os, float array[2]);
+/*
+template <typename T>
+std::ostream& operator<<(std::ostream& os, T* ptr){
+    os << static_cast<void const *>(ptr);
+    return os;
+}*/
 

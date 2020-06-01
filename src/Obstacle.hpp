@@ -17,6 +17,7 @@ class Obstacle: public GameObject{
             sf::FloatRect currentBounds;
             currentBounds = sprite.getGlobalBounds();
             sprite.setScale(bounds.width/currentBounds.width,bounds.height/currentBounds.height);
+            collideable=true;
         }
         
         virtual ~Obstacle(){}
