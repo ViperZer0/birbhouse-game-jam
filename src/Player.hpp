@@ -26,17 +26,19 @@ class Player: public GameActor{
         */
 
         std::vector<Equipment *> equipment;
-
+        sf::Vector2f equipOffset;
 
     public:
         Player();
         ~Player() {}
         //void setSprite(AnimatedSprite *sprite);
+        virtual void update(Player *player);
         void handleInput(sf::Event event);
         void equip(Equipment* equip);
         void pickUp(GameObject *obj);
         void addCoins(int val);
         void swap(Equipment* a, std::vector<Equipment *>::iterator b);
+        sf::Vector2f getOffset() {return equipOffset;}
 
 };
 

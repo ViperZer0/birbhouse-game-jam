@@ -29,7 +29,8 @@ class AnimatedSprite: public sf::Drawable{
         sf::FloatRect getGlobalBounds(){
             return sprite.getGlobalBounds();
         }
-
+        
+        int getFrame();
 
         void update();
 };

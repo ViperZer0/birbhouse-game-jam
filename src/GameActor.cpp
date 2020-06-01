@@ -11,9 +11,7 @@ GameActor::GameActor(){
     vel[1] = 0; acc[0] = 0;
     acc[1] = 0;
     jumpVel=500;
-    moveSpeed=500;
-    fallAcc=500;
-    acc[1] = fallAcc;
+    moveSpeed=500; fallAcc=500; acc[1] = fallAcc;
     jumpDebounce=false;
     falling=true;
     collideRight=false;
@@ -34,8 +32,7 @@ void GameActor::right(){
 
 void GameActor::left(){
     if(!collideLeft)
-        vel[0] = -moveSpeed;
-}
+        vel[0] = -moveSpeed; }
 
 void GameActor::stop(){
     vel[0] = 0;
@@ -108,7 +105,7 @@ void GameActor::setSprite(AnimatedSprite *sprite){
 
 void GameActor::setTexture(sf::Texture *tex){
     sprite->setTexture(tex);
-    }
+}
 void GameActor::draw(sf::RenderTarget &target, sf::RenderStates states) const{
     target.draw(*sprite);
 }

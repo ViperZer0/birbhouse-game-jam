@@ -24,5 +24,6 @@ class AnimationSequence{
         void addFrame(sf::IntRect frame,sf::Time frameHold);
         //get current frame 
         sf::IntRect getFrame();
+        int getFrameNum() { return frame; }
 };
 

@@ -29,3 +29,7 @@ sf::Sprite AnimatedSprite::getSprite(){
     return sprite;
 }
 
+int AnimatedSprite::getFrame(){
+    return animation->getFrameNum();
+}
+

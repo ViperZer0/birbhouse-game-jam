@@ -115,3 +115,19 @@ void Player::swap(Equipment *a, std::vector<Equipment *>::iterator b){
     (*b)->dropped(this);
     equipment.erase(b);
 }
+
+void Player::update(Player *player){
+    //YOOO we can do that, note to seLF
+    GameActor::update(player);
+    switch(sprite->getFrame()){
+        case 0:
+            equipOffset = sf::Vector2f(0,0);
+            break;
+        case 1:
+            equipOffset = sf::Vector2f(0,8);
+            break;
+        default:
+            equipOffset = sf::Vector2f(0,0);
+            break;
+    }
+}
