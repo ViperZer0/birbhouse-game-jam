@@ -25,8 +25,8 @@ void AnimatedSprite::draw(sf::RenderTarget &target, sf::RenderStates states) con
     target.draw(sprite);
 }
 
-sf::Sprite AnimatedSprite::getSprite(){
-    return sprite;
+sf::Sprite* AnimatedSprite::getSprite(){
+    return &sprite;
 }
 
 int AnimatedSprite::getFrame(){

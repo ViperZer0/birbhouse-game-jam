@@ -11,8 +11,10 @@ class GameObject: public sf::Drawable{
     protected:
         std::string id;
         bool collideable;
+        //Might not use this?
+        bool render;
     public:
-        GameObject() { id = "";}
+        GameObject() { id = "";render=true;}
         bool canCollide() { return collideable;}
         virtual sf::FloatRect getGlobalBounds() {return sf::FloatRect(0,0,0,0);}
         virtual ~GameObject() {} 
@@ -22,6 +24,6 @@ class GameObject: public sf::Drawable{
         virtual void detectCollisions(GameObject *obj) {};
         virtual void update(Player *player) {};
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const {};
-        virtual sf::Sprite getSprite() {}; 
+        virtual sf::Sprite* getSprite() {}; 
 };
 

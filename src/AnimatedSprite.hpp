@@ -19,13 +19,16 @@ class AnimatedSprite: public sf::Drawable{
         }
         void setTexture(sf::Texture *tex);
         void setAnimationSeq(AnimationSequence* seq);
-        sf::Sprite getSprite();
+        sf::Sprite* getSprite();
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
         void setPosition(float x, float y){
             sprite.setPosition(x,y);
         }
-
+        
+        void setPosition(sf::Vector2f vec){
+            sprite.setPosition(vec);
+        }
         sf::FloatRect getGlobalBounds(){
             return sprite.getGlobalBounds();
         }

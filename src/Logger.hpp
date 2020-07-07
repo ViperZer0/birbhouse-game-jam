@@ -31,7 +31,7 @@ std::ostream& operator<<(std::ostream& os, sf::Rect<T> rect){
 }*/
 
 std::ostream& operator<<(std::ostream& os, sf::FloatRect rect);
-
+std::ostream& operator<<(std::ostream& os, sf::Vector2f vec);
 std::ostream& operator<<(std::ostream& os, float array[2]);
 /*
 template <typename T>

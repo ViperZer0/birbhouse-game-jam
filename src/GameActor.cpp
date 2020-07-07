@@ -1,6 +1,6 @@
 #include "GameActor.hpp"
-#include "Obstacle.hpp"
-#include <iostream>
+#include "Obstacle.hpp" 
+#include <iostream> 
 #include <cmath>
 #include "Logger.hpp"
 
@@ -50,8 +50,7 @@ void GameActor::update(std::vector<Obstacle> obstacles){j
         vel[1] += acc[1]*timeElapsed;
         pos[1] += vel[1]*timeElapsed;
     }
-    else{
-        acc[1] = 0;
+    else{ acc[1] = 0;
         vel[1] = 0;
     }
     pos[0] += vel[0]*timeElapsed;
@@ -68,7 +67,7 @@ void GameActor::resetTimer(){
 }
 
 void GameActor::update(Player *player){
-    Logger::log(Log::DEBUG,"Vel:", vel, "Acc:", acc);
+    //Logger::log(Log::DEBUG,"Vel:", vel, "Acc:", acc);
     if(falling){
         //positive Y is down
         acc[1]=fallAcc; 
@@ -89,7 +88,7 @@ void GameActor::update(Player *player){
             vel[1] = 0;
 
     pos[0] += vel[0]*timeElapsed;
-    sprite->setPosition(pos[0],pos[1]);
+    sprite->setPosition(sf::Vector2f(pos[0],pos[1])-sprite->getSprite()->getOrigin());
     sprite->update();
     //Reset collisions for next loop
     falling=true;
@@ -122,18 +121,19 @@ void GameActor::detectCollisions(GameObject *obj){
     if(obj->canCollide()){
         hitTimer();
         sf::FloatRect cur = getGlobalBounds();
-        Logger::log(Log::DEBUG,"Vel:",vel);
+        //Logger::log(Log::DEBUG,"Vel:",vel);
         sf::FloatRect next = sf::FloatRect( \
                 //Assume movement because if we base it off current velocity it might be 0. No wait we can't do that I guess.
                 cur.left + vel[0]*timeElapsed,\
                 //Incorporate gravity here?
-                cur.top + vel[1]*timeElapsed + 1.0/2.0*fallAcc*pow(timeElapsed,2), \
+                cur.top + vel[1]*timeElapsed + 1.0/2.0*fallAcc*timeElapsed*timeElapsed, \
                 cur.width,\
                 cur.height\
                 );
 
         Direction currentCol = getDirection(cur,obj->getGlobalBounds());
         Direction nextCol = getDirection(next,obj->getGlobalBounds());
+        /*
         Logger::log(Log::DEBUG,"timeElapsed:", timeElapsed);
         Logger::log(Log::DEBUG,"Acceleration:", 1.0/2.0*fallAcc*timeElapsed*timeElapsed);
         Logger::log(Log::DEBUG,"fallAcc:",fallAcc, " Calculated drop: ", vel[1]*timeElapsed + 1.0/2.0*fallAcc*timeElapsed*timeElapsed);
@@ -141,9 +141,9 @@ void GameActor::detectCollisions(GameObject *obj){
         Logger::log(Log::DEBUG,"Next: ", next);
         Logger::log(Log::DEBUG,"currentCol:", currentCol);
         Logger::log(Log::DEBUG,"nextCol:", nextCol);
-
+        */
         if (nextCol == Direction::collide){
-            Logger::log(Log::DEBUG,"Colliding!");
+            //Logger::log(Log::DEBUG,"Colliding!");
             switch(currentCol){
                 case Direction::left:
                     collideLeft = true;
@@ -161,7 +161,7 @@ void GameActor::detectCollisions(GameObject *obj){
                     bonking=true;
                     break;
                 case Direction::collide:
-                    Logger::log(Log::WARNING,"GameActor got Direction::collide. Probably something got stuck inside something else.");
+                    //Logger::log(Log::WARNING,"GameActor got Direction::collide. Probably something got stuck inside something else.");
                     //whoops we broke shit this is NOT good.
                     break;
                 default:
@@ -177,27 +177,49 @@ void GameActor::detectCollisions(GameObject *obj){
 std::ostream& operator<<(std::ostream& os, Direction direction){
     switch(direction){
         case Direction::left:
-            os << std::string("LEFT");
             break;
         case Direction::right:
-            os << std::string("RIGHT");
             break;
         case Direction::up:
-            os << std::string("UP");
             break;
         case Direction::down:
-            os << std::string("DOWN");
             break;
         case Direction::collide:
-            os << std::string("COLLIDE");
             break;
         default:
-            os << std::string("NONE");
             break;
     }
     return os;
 }
 
-sf::Sprite GameActor::getSprite(){
+sf::Sprite* GameActor::getSprite(){
     return sprite->getSprite();
+}
+
+void GameActor::flip(){
+    Logger::log(Log::DEBUG,"FLIP");
+    sf::Vector2f off = sprite->getSprite()->getOrigin();
+    sf::Vector2f bounds = sf::Vector2f(\
+            sprite->getGlobalBounds().width,\
+            sprite->getGlobalBounds().height);
+
+    sprite->getSprite()->setOrigin(bounds/2.f);
+    sprite->getSprite()->scale(-1.f,1.f);
+    flipped = !flipped;
+    sprite->getSprite()->setOrigin(off);
+}
+
+bool GameActor::isFlipped(){
+    return flipped;
+}
+
+sf::Vector2f GameActor::getOffset(){
+    Logger::log(Log::DEBUG,"getOffset():",sprite->getSprite()->getGlobalBounds());
+    Logger::log(Log::DEBUG,"BEEP");
+    if(flipped){
+        return sf::Vector2f(sprite->getSprite()->getGlobalBounds().left+sprite->getSprite()->getGlobalBounds().width,sprite->getSprite()->getGlobalBounds().top);
+    }
+    else{ 
+        return sf::Vector2f(sprite->getSprite()->getGlobalBounds().left,sprite->getGlobalBounds().top);
+    }
 }

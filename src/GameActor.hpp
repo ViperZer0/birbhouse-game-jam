@@ -16,6 +16,8 @@ class GameActor: public GameObject{
         float fallAcc;
         float moveSpeed;
         bool jumpDebounce;
+        bool flipped;
+        bool movingRight; 
         //Note we don't actually handle collisions in this function, we're gonna have children that do this.
         bool bonking;
         bool falling;
@@ -35,6 +37,8 @@ class GameActor: public GameObject{
         void jump();
         void right();
         void left();
+        virtual void flip();
+        bool isFlipped();
         void stop();
         virtual void update(Player *player);
         virtual sf::FloatRect getGlobalBounds(){
@@ -48,7 +52,8 @@ class GameActor: public GameObject{
         void setSprite(AnimatedSprite *sprite);
         
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
-        virtual sf::Sprite getSprite();
+        virtual sf::Sprite* getSprite();
+        virtual sf::Vector2f getOffset();
 };
 
 std::ostream& operator<<(std::ostream& os, Direction direction);

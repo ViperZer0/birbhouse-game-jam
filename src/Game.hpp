@@ -12,7 +12,7 @@ class Game{
     private:
         sf::RenderWindow window;
         sf::Texture *tilemap;
-        Player player; 
+        Player *player; 
         std::vector<GameObject *> objects; 
         const int framelimit = 30;
         //std::vector<Obstacle> obstacles;
@@ -26,4 +26,18 @@ class Game{
         //Set framerate limit to eliminate clipping
         void wait();
         ~Game();
+
+        void removeObject(GameObject *);
+        void addObject(GameObject *);
 };
+/*
+void Game::removeObject(GameObject *obj){
+    std::vector<GameObject *>::iterator it;
+    it = find(objects.begin(), objects.end(), obj);
+    if(it != objects.end())
+        objects.erase(it);
+}
+
+void Game::addObject(GameObject *obj){
+    objects.push_back(obj);
+}*/

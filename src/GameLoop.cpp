@@ -35,6 +35,6 @@ void Game::loop(){
                 (*obj)->detectCollisions(*other);
             }
         }
-        (*obj)->update(&player);
+        (*obj)->update(player);
     }
 }

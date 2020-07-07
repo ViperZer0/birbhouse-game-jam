@@ -7,6 +7,7 @@ set(CMAKE_BUILD_TYPE Debug)
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 add_executable(birbhouse-game-jam 
     src/main.cpp
+    src/Game.cpp
     src/GameInit.cpp
     src/GameEvents.cpp
     src/GameLoop.cpp

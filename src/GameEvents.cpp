@@ -10,7 +10,7 @@ void Game::events(){
                 running=false;
                 break;
             default:
-                player.handleInput(event);
+                player->handleInput(event);
         }
     }
 }
