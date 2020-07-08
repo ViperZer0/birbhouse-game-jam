@@ -40,7 +40,7 @@ class GameActor: public GameObject{
         virtual void flip();
         bool isFlipped();
         void stop();
-        virtual void update(Player *player);
+        virtual void update();
         virtual sf::FloatRect getGlobalBounds(){
             return sprite->getGlobalBounds();
         }

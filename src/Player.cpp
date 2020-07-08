@@ -135,7 +135,7 @@ void Player::swap(Equipment *a, std::vector<Equipment *>::iterator b){
     linkSlot(a);
     equipment.push_back(a);
     a->equipped(this);
-    (*b)->dropped(this);
+    (*b)->dropped();
     equipment.erase(b);
 }
 
@@ -159,19 +159,19 @@ void Player::linkSlot(Equipment *a){
     }
 } 
 
-void Player::update(Player *player){
-    //Logger::log(Log::DEBUG,"Origin:",sprite->getSprite()->getOrigin());
+void Player::update(){
+    Logger::log(Log::DEBUG,"Origin:",sprite->getSprite()->getOrigin());
     //YOOO we can do that, note to seLF
-    GameActor::update(player);
+    GameActor::update();
 
     if(helmet != nullptr)
-        helmet->update(player);
+        helmet->update();
     if(mainHand != nullptr)
-        mainHand->update(player);
+        mainHand->update();
     if(offHand != nullptr)
-        offHand->update(player);
+        offHand->update();
     if(foot != nullptr)
-        foot->update(player);
+        foot->update();
 
     switch(sprite->getFrame()){
         case 0:

@@ -30,7 +30,7 @@ class Player: public GameActor{
         Player(Game *g);
         ~Player() {}
         //void setSprite(AnimatedSprite *sprite);
-        virtual void update(Player *player);
+        virtual void update();
         virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
         void handleInput(sf::Event event);
         void equip(Equipment* equip);

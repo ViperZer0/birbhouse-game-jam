@@ -11,15 +11,16 @@ GameActor::GameActor(){
     vel[1] = 0; acc[0] = 0;
     acc[1] = 0;
     jumpVel=500;
-    moveSpeed=500; fallAcc=500; acc[1] = fallAcc;
+    moveSpeed=500;
+    fallAcc=500;
+    acc[1] = fallAcc;
     jumpDebounce=false;
     falling=true;
     collideRight=false;
     collideLeft=false;
-
+    flipped=false;
     delta.restart();
 }
-
 void GameActor::jump(){
     if(jumpDebounce == false){
         vel[1] = -jumpVel;
@@ -66,7 +67,7 @@ void GameActor::resetTimer(){
     delta.restart();
 }
 
-void GameActor::update(Player *player){
+void GameActor::update(){
     //Logger::log(Log::DEBUG,"Vel:", vel, "Acc:", acc);
     if(falling){
         //positive Y is down
@@ -161,7 +162,8 @@ void GameActor::detectCollisions(GameObject *obj){
                     bonking=true;
                     break;
                 case Direction::collide:
-                    //Logger::log(Log::WARNING,"GameActor got Direction::collide. Probably something got stuck inside something else.");
+                    Logger::log(Log::WARNING,"GameActor got Direction::collide. Probably something got stuck inside something else.");
+                    vel[1] = -100; //quick fix??
                     //whoops we broke shit this is NOT good.
                     break;
                 default:
@@ -198,15 +200,12 @@ sf::Sprite* GameActor::getSprite(){
 
 void GameActor::flip(){
     Logger::log(Log::DEBUG,"FLIP");
-    sf::Vector2f off = sprite->getSprite()->getOrigin();
-    sf::Vector2f bounds = sf::Vector2f(\
-            sprite->getGlobalBounds().width,\
-            sprite->getGlobalBounds().height);
-
-    sprite->getSprite()->setOrigin(bounds/2.f);
+    if(isFlipped())
+        sprite->getSprite()->move(-(sprite->getSprite()->getGlobalBounds().width),0);
+    else
+        sprite->getSprite()->move(sprite->getSprite()->getGlobalBounds().width,0);
     sprite->getSprite()->scale(-1.f,1.f);
     flipped = !flipped;
-    sprite->getSprite()->setOrigin(off);
 }
 
 bool GameActor::isFlipped(){
